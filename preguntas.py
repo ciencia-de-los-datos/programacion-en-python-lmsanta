@@ -12,6 +12,11 @@ Utilice el archivo `data.csv` para resolver las preguntas.
 
 """
 
+# leer y tranformar archivo
+with open("data.csv","r") as file:
+    data = file.readlines()
+data = [row.replace('\t','|').replace('\n','') for row in data]
+data = [row.split("|") for row in data]
 
 def pregunta_01():
     """
@@ -21,8 +26,12 @@ def pregunta_01():
     214
 
     """
-    return
+    result_1=0
+    for i in data:
+        result_1= result_1 + int(i[1])
+    result_1
 
+    return result_1
 
 def pregunta_02():
     """
@@ -39,7 +48,12 @@ def pregunta_02():
     ]
 
     """
-    return
+    # importar libreria necesaria
+    from collections import Counter
+
+    list_2 = sorted(list(Counter([i[0] for i in data]).items()))
+
+    return list_2
 
 
 def pregunta_03():
@@ -55,9 +69,20 @@ def pregunta_03():
         ("D", 31),
         ("E", 67),
     ]
-
     """
-    return
+    list_3 = [(i[0], int(i[1])) for i in data]
+
+    letter_sum = {}
+
+    for letter, num in list_3:
+        if letter in letter_sum:
+            letter_sum[letter] += num
+        else:
+            letter_sum[letter] = num
+
+    result_3 = sorted(list((letter, letter_sum[letter]) for letter in letter_sum))
+
+    return result_3
 
 
 def pregunta_04():
@@ -82,7 +107,11 @@ def pregunta_04():
     ]
 
     """
-    return
+    from collections import Counter
+    
+    list_4 = sorted(list(Counter([i[1] for i in [i[2].split('-') for i in data]]).items()))
+
+    return list_4
 
 
 def pregunta_05():
@@ -100,7 +129,21 @@ def pregunta_05():
     ]
 
     """
-    return
+    list_5 = [(i[0], int(i[1])) for i in data]
+
+    dict_5 = {}
+
+    for item in list_5:
+        letter, num = item
+        if letter not in dict_5:
+            dict_5[letter] = [num, num]
+        else:
+            dict_5[letter][0] = max(dict_5[letter][0], num)
+            dict_5[letter][1] = min(dict_5[letter][1], num)
+
+    result_5 = sorted([(letter, num[0], num[1]) for letter, num in dict_5.items()])
+
+    return result_5
 
 
 def pregunta_06():
@@ -125,7 +168,21 @@ def pregunta_06():
     ]
 
     """
-    return
+    list_6 = [(i[4]) for i in data]
+
+    dict_6 = {}
+
+    for row in list_6:
+        for item in row.split(','):
+            key, value = item.split(':')
+            if key not in dict_6:
+                dict_6[key] = [int(value)]
+            else:
+                dict_6[key].append(int(value))
+
+    result_6 = sorted([(key,min(dict_6[key]),max(dict_6[key]))  for key in dict_6])
+
+    return result_6
 
 
 def pregunta_07():
@@ -149,7 +206,20 @@ def pregunta_07():
     ]
 
     """
-    return
+    list_7 = [(int(i[1]), i[0]) for i in data]
+
+    dict_7 = {}
+
+    for item in list_7:
+        key, value = item
+        if key not in dict_7:
+            dict_7[key] = [value]
+        else:
+            dict_7[key].append(value)
+
+    result_7 = sorted(list(dict_7.items()))
+
+    return result_7
 
 
 def pregunta_08():
@@ -174,7 +244,22 @@ def pregunta_08():
     ]
 
     """
-    return
+    list_8 = [(int(i[1]), i[0]) for i in data]
+
+    dict_8 = {}
+
+    for item in list_8:
+        key, value = item
+        if key not in dict_8:
+            dict_8[key] = [value]
+        elif value in dict_8[key]:
+            pass
+        else:
+            dict_8[key].append(value)
+
+    result_8 = sorted(list((key,sorted(dict_8[key])) for key in dict_8))
+
+    return result_8
 
 
 def pregunta_09():
@@ -197,7 +282,21 @@ def pregunta_09():
     }
 
     """
-    return
+    list_9 = [(i[4]) for i in data]
+
+    dict_9 = {}
+
+    for row in list_9:
+        for item in row.split(','):
+            key, value = item.split(':')
+            if key not in dict_9:
+                dict_9[key] = 1
+            else:
+                dict_9[key] += 1
+
+    result_9= {key: value for key, value in sorted(dict_9.items())}
+
+    return result_9
 
 
 def pregunta_10():
@@ -215,10 +314,10 @@ def pregunta_10():
         ("E", 2, 3),
         ("E", 3, 3),
     ]
-
-
     """
-    return
+    list_10 = [(i[0],len((i[1]).split(',')),len((i[2]).split(','))) for i in [(i[0], i[3], i[4]) for i in data]]
+
+    return list_10
 
 
 def pregunta_11():
@@ -236,10 +335,24 @@ def pregunta_11():
         "f": 134,
         "g": 35,
     }
-
-
     """
-    return
+    list_11 = [(i[1],i[3]) for i in data]
+
+    dict_11 = {}
+
+    for row in list_11:
+        list_keys = row[1].split(',')
+        value = int(row[0])
+
+        for key in list_keys:
+            if key not in dict_11.keys(): 
+                dict_11[key] = value
+            else:
+                dict_11[key] = dict_11[key] + value
+
+    result_11= {key: value for key, value in sorted(dict_11.items())}
+
+    return result_11
 
 
 def pregunta_12():
@@ -257,4 +370,19 @@ def pregunta_12():
     }
 
     """
-    return
+    list_12 = [[i[0],i[4].split(',')] for i in data]
+
+    dict_12 = {}
+
+    for letra, lista in list_12:
+        suma = 0
+        for valor in lista:
+            suma += int(valor.split(':')[1])
+        if letra in dict_12:
+            dict_12[letra] += suma
+        else:
+            dict_12[letra] = suma
+
+    dict_12 = dict(sorted(dict_12.items()))
+
+    return dict_12
